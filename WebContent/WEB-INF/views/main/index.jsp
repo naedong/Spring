@@ -6,14 +6,14 @@
 <head>
 <meta charset="EUC-KR">
 
-<title>BteamÇÙ½É ¸ŞÀÎ</title>
+<title>Bteamí•µì‹¬ ë©”ì¸</title>
 </head>
 <body>
 
-	<%-- ¿©±â±îÁö Çì´õ --%>
-	<h1>${sessionScope.sessionId }´ÔÈ¯¿µÇÕ´Ï´Ù.</h1>
-	<h1>È¸¿ø¹øÈ£´Â ${sessionScope.sessionNum }</h1>
-	<h1>µî±ŞÀº ${sessionScope.sessionTier }ÀÔ´Ï´Ù</h1>
+	<%-- ì—¬ê¸°ê¹Œì§€ í—¤ë” --%>
+	<h1>${sessionScope.sessionId }ë‹˜í™˜ì˜í•©ë‹ˆë‹¤.</h1>
+	<h1>íšŒì›ë²ˆí˜¸ëŠ” ${sessionScope.sessionNum }</h1>
+	<h1>ë“±ê¸‰ì€ ${sessionScope.sessionTier }ì…ë‹ˆë‹¤</h1>
 
 	<script type="text/javascript">
     window.onload = function() {
@@ -61,7 +61,7 @@
 
         d3.json('${pageContext.request.contextPath}/resources/json/korea.json', function(json) {
             states
-                .selectAll('path') //Áö¿ª ¼³Á¤
+                .selectAll('path') //ì§€ì—­ ì„¤ì •
                 .data(json.features)
                 .enter()
                 .append('path')
@@ -71,7 +71,7 @@
                 });
             labels = states
                 .selectAll('text')
-                .data(json.features) //¶óº§Ç¥½Ã
+                .data(json.features) //ë¼ë²¨í‘œì‹œ
                 .enter()
                 .append('text')
                 .attr('transform', translateTolabel)
@@ -116,7 +116,7 @@
     }
     </script>
 	<script>
-		var apiURI = "https://api.openweathermap.org/data/2.5/weather?id=1835848&appid=f86baf9bddf3c35d74d50679068c6c86";
+		var apiURI = "https://api.openweathermap.org/data/2.5/weather?id={"id"}";
 		$.ajax({
 					url : apiURI,
 					dataType : "json",
@@ -124,28 +124,28 @@
 					async : "false",
 					success : function(data) {
 						console.log(data);
-						console.log("ÇöÀç¿Âµµ : " + (data.main.temp - 273.15));
-						console.log("ÇöÀç½Àµµ : " + data.main.humidity);
-						console.log("³¯¾¾ : " + data.weather[0].main);
-						console.log("»ó¼¼³¯¾¾¼³¸í : " + data.weather[0].description);
-						console.log("³¯¾¾ ÀÌ¹ÌÁö : " + data.weather[0].icon);
-						console.log("¹Ù¶÷   : " + data.wind.speed);
-						console.log("³ª¶ó   : " + data.sys.country);
-						console.log("µµ½ÃÀÌ¸§  : " + data.name);
-						console.log("±¸¸§  : " + (data.clouds.all) + "%");
+						console.log("í˜„ì¬ì˜¨ë„ : " + (data.main.temp - 273.15));
+						console.log("í˜„ì¬ìŠµë„ : " + data.main.humidity);
+						console.log("ë‚ ì”¨ : " + data.weather[0].main);
+						console.log("ìƒì„¸ë‚ ì”¨ì„¤ëª… : " + data.weather[0].description);
+						console.log("ë‚ ì”¨ ì´ë¯¸ì§€ : " + data.weather[0].icon);
+						console.log("ë°”ëŒ   : " + data.wind.speed);
+						console.log("ë‚˜ë¼   : " + data.sys.country);
+						console.log("ë„ì‹œì´ë¦„  : " + data.name);
+						console.log("êµ¬ë¦„  : " + (data.clouds.all) + "%");
 						var weather = Math.ceil((data.main.temp - 273.15));
 						
 						
-							$('#1').html("¿À´ÃÀÇ ³¯¾¾´Â "+data.weather[0].main+", ÇöÀç½Àµµ : "+data.main.humidity
-									+", ÇöÀç ¿Âµµ´Â "+weather+"µµ , »ó¼¼ ³¯¾¾ ¼³¸í "+data.weather[0].description
-									+", ¹Ù¶÷ÀÇ ¼Óµµ´Â "+data.wind.speed+", ±¸¸§ ·®Àº"+ (data.clouds.all)+"%");
+							$('#1').html("ì˜¤ëŠ˜ì˜ ë‚ ì”¨ëŠ” "+data.weather[0].main+", í˜„ì¬ìŠµë„ : "+data.main.humidity
+									+", í˜„ì¬ ì˜¨ë„ëŠ” "+weather+"ë„ , ìƒì„¸ ë‚ ì”¨ ì„¤ëª… "+data.weather[0].description
+									+", ë°”ëŒì˜ ì†ë„ëŠ” "+data.wind.speed+", êµ¬ë¦„ ëŸ‰ì€"+ (data.clouds.all)+"%");
 					}
 				});
 	</script>
 	
 	<br>
 		<div id="test2">
-			<h1 class="bg-primary text-center" style="color: white;">½Ç½Ã°£ ³¯¾¾ Á¤º¸</h1>
+			<h1 class="bg-primary text-center" style="color: white;">ì‹¤ì‹œê°„ ë‚ ì”¨ ì •ë³´</h1>
 	        <h3 id="1" class="bg-primary text-center" style="color: white;"></h3>
 	
 		</div>
