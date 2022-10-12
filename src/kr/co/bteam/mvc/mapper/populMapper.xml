@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="EUC-KR"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="popul">
+	<select id="piechart" resultType="pop">
+		select decode(p.ploc,
+		'제주특','제주',
+		'세종특','세종',
+		'울산광','울산',
+		'경기도','경기',
+		'강원도','강원',
+		'충청북','충북',
+		'충청남','충남',
+		'경상북','경북',
+		'대구광','대구',
+		'광주광','광주',
+		'대전광','대전',
+		'인천광','인천',
+		'경상남','경남',
+		'부산광','부산',
+		'서울특','서울',
+		'전라북','전북',
+		'전라남','전남') as "ploc",
+		to_number(to_char(1000*round(p.pcnt/b.scnt,3))||to_char(1000*round(p.pcnt/b.scnt,3)))
+		as "ydata", xdata
+		from popul p,(select sum(pcnt) as scnt from popul) b order by 3
+	</select>
+</mapper>

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="EUC-KR"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="shop">
+	<select id="listpage" resultType="sho" parameterType="map">
+		select *
+		from (
+		select rownum r_num, a.snum, a.bnum, a.sname, a.sloc, a.scate,
+		a.onoff, a.ctf, to_char(a.sdate, 'yyyy-MM-dd HH24:MI:SS') sdate,
+		to_char(a.edate, 'yyyy-MM-dd HH24:MI:SS') edate from (
+		select * from
+		shop order by snum desc
+		) a
+		) where r_num BETWEEN #{begin} and #{end}
+	</select>
+
+	<select id="totalshop" resultType="int">
+		select count(*) from shop
+	</select>
+
+	<insert id="shopin" parameterType="map" statementType="CALLABLE">
+		{CALL
+		insertshop (#{uno},#{sno},#{sna},#{slo},#{sca},#{onof})}
+	</insert>
+
+	<update id="upsname" parameterType="sho">
+		update shop set
+		sname=#{sname} where snum=#{snum}
+	</update>
+
+	<update id="upscate" parameterType="sho">
+		update shop set
+		scate=#{scate} where snum=#{snum}
+	</update>
+
+	<update id="upscloc" parameterType="sho">
+		update shop set sloc=#{sloc}
+		where snum=#{snum}
+	</update>
+
+	<select id="selectSearchList" parameterType="map"
+		resultType="sho">
+		select * from (
+		select rownum r_num, a.* from (
+		select * from shop where
+		ctf = '승인' and
+		<choose>
+			<when test="sname != null">
+				sname
+			</when>
+			<when test="sloc != null">
+				sloc
+			</when>
+		</choose>
+		like '%'||#{keyword}||'%'
+		order by snum desc
+		) a
+		) where r_num BETWEEN #{begin} and #{end}
+	</select>
+
+	<select id="searchCount" parameterType="map" resultType="int">
+		select count(*) from shop
+		where
+		<choose>
+			<when test="sname != null">
+				sname = #{keyword}
+			</when>
+			<when test="sloc != null">
+				sloc = #{keyword}
+			</when>
+		</choose>
+	</select>
+
+	<select id="expectshop" resultType="exp">
+		select distinct s.snum,
+		s.sname, substr(s.sloc,8,3) "sloc", s.scate,
+		p.ploc, p.pcnt,
+		a."total"/a."slash" as "avg",
+		trunc((round(p.pcnt/49703,3)*100)*(a."total"/a."slash")) "expect"
+		from
+		shop s, popul p, (select s.snum, sum(i.iprice*i.istoke) "total",
+		count(i.iname) "slash" from sinfo i, shop s where s.snum = i.snum
+		group
+		by s.snum) a
+		where substr(s.sloc,8,3) = p.ploc
+		and s.snum in
+		(select s.snum from sinfo i, shop s where s.snum = i.snum
+		group by
+		s.snum)
+		and s.snum = a.snum
+	</select>
+
+</mapper>

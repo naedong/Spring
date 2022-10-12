@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="EUC-KR"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="master">
+	<select id="listshop" resultType="sho" parameterType="map">
+		select *
+		from (
+		select rownum r_num, a.* from (
+		select * from shop where sloc like '%'||#{name}||'%' order by snum
+		) a
+		) where r_num BETWEEN #{begin}
+		and
+		#{end}
+	</select>
+
+	<select id="total" resultType="int" parameterType="String">
+		select
+		count(*) from shop where sloc like '%'||#{name}||'%'
+	</select>
+
+	<update id="upconf" parameterType="sho">
+		update shop set ctf='승인' where
+		snum=#{snum}
+	</update>
+
+	<update id="rejconf" parameterType="sho">
+		update shop set ctf='거부'
+		where snum=#{snum}
+	</update>
+	
+	<delete id="delete" parameterType="int" statementType="CALLABLE">
+		{CALL deluser (#{nu})}
+	</delete>
+</mapper>
